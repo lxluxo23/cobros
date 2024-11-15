@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@RepositoryRestResource
 public interface GastoRepository extends JpaRepository<Gasto,Long> {
     List<Gasto> findByCliente(Cliente cliente);
 }

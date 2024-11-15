@@ -21,9 +21,9 @@ public class GastoController {
         Gasto gasto = Gasto.builder()
                 .descripcion(gastoDTO.getDescripcion())
                 .monto(gastoDTO.getMonto())
-                .fechaGasto(gastoDTO.getFecha() != null ? gastoDTO.getFecha().atStartOfDay() : LocalDateTime.now())
+                .fechaGasto(gastoDTO.getFechaGasto() != null ? gastoDTO.getFechaGasto(): LocalDateTime.now())
                 .build();
-        Gasto nuevoGasto = gastoService.registrarGasto(gasto,gastoDTO.getClienteId(),gastoDTO.getComprobanteId());
+        Gasto nuevoGasto = gastoService.registrarGasto(gasto,gastoDTO.getCliente().getId(),gastoDTO.getComprobante().getId());
         return ResponseEntity.ok(nuevoGasto);
     }
 
