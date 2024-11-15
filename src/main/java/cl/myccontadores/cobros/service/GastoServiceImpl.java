@@ -3,6 +3,7 @@ package cl.myccontadores.cobros.service;
 import cl.myccontadores.cobros.entity.Cliente;
 import cl.myccontadores.cobros.entity.Comprobante;
 import cl.myccontadores.cobros.entity.Gasto;
+import cl.myccontadores.cobros.repository.ComprobanteRepository;
 import cl.myccontadores.cobros.repository.GastoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import cl.myccontadores.cobros.exeptions.ResourceNotFoundException;
@@ -17,6 +18,9 @@ public class GastoServiceImpl implements GastoService {
     private GastoRepository gastoRepository;
 
     @Autowired
+    private ComprobanteRepository comprobanteRepository;
+
+    @Autowired
     private ClienteService clienteService;
 
     @Autowired
@@ -29,7 +33,7 @@ public class GastoServiceImpl implements GastoService {
         Cliente cliente = clienteService.obtenerClientePorId(clienteId);
         gasto.setCliente(cliente);
         if (comprobanteId != null) {
-            Comprobante comprobante = comprobanteService.obtenerComprobantePorId(comprobanteId);
+            Comprobante comprobante = comprobanteRepository.findById(comprobanteId).orElseThrow(RuntimeException::new);
             gasto.setComprobante(comprobante);
         }
 

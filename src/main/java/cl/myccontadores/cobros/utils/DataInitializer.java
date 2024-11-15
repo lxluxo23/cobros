@@ -4,8 +4,10 @@ import cl.myccontadores.cobros.entity.*;
 import cl.myccontadores.cobros.enums.EstadoFactura;
 import cl.myccontadores.cobros.enums.TipoComprobante;
 import cl.myccontadores.cobros.repository.*;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Component
+@Log4j2
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
@@ -38,6 +41,12 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private ComprobanteRepository comprobanteRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     @Override
     public void run(String... args) throws Exception {
         Cliente cliente1 = Cliente.builder()
@@ -161,7 +170,23 @@ public class DataInitializer implements CommandLineRunner {
 
         cliente2.setSaldoPendiente(cliente2.getSaldoPendiente() + gasto1.getMonto());
         clienteRepository.save(cliente2);
-        System.out.println("Datos de inicialización cargados exitosamente.");
+
+        Usuario u1 = Usuario.builder()
+                .nombreUsuario("admin")
+                .nombre("Admin")
+                .apellido("Admin")
+                .email("admin@example.com")
+                .password(passwordEncoder.encode("caca1234"))
+                .build();
+        Usuario u2 = Usuario.builder()
+                .nombreUsuario("andrea")
+                .nombre("Andrea")
+                .apellido("Cespedes")
+                .email("a.cespedes@myccontadores.cl")
+                .password(passwordEncoder.encode("7689myc"))
+                .build();
+        usuarioRepository.saveAll(Arrays.asList(u1, u2));
+        log.info("Datos de inicialización cargados exitosamente.");
 
     }
 }
