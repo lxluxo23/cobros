@@ -25,12 +25,16 @@ public class Factura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "factura_id")
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id",nullable = false)
+    @JsonBackReference
     private Cliente cliente;
+
     private LocalDateTime fechaEmision;
     private Byte mesCorrespondiente;
     private Long montoTotal;
+
     @Enumerated(EnumType.STRING)
     private EstadoFactura estado;
 
@@ -41,4 +45,8 @@ public class Factura {
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Pago> pagos;
+
+    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Gasto> gastos;
 }

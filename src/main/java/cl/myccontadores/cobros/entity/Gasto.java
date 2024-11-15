@@ -1,5 +1,6 @@
 package cl.myccontadores.cobros.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,13 @@ public class Gasto {
 
     @ManyToOne
     @JoinColumn(name = "cliente_id",nullable = false)
+    @JsonBackReference
     private Cliente cliente;
+
+    @ManyToOne
+    @JoinColumn(name = "factura_id")
+    @JsonBackReference
+    private Factura factura;
 
     private LocalDateTime fechaGasto;
     private Integer monto;

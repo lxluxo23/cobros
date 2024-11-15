@@ -1,9 +1,12 @@
 package cl.myccontadores.cobros.service;
 
+import cl.myccontadores.cobros.dto.GastoDTO;
 import cl.myccontadores.cobros.entity.Cliente;
 import cl.myccontadores.cobros.entity.Comprobante;
+import cl.myccontadores.cobros.entity.Factura;
 import cl.myccontadores.cobros.entity.Gasto;
 import cl.myccontadores.cobros.repository.ComprobanteRepository;
+import cl.myccontadores.cobros.repository.FacturaRepository;
 import cl.myccontadores.cobros.repository.GastoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import cl.myccontadores.cobros.exeptions.ResourceNotFoundException;
@@ -26,8 +29,11 @@ public class GastoServiceImpl implements GastoService {
     @Autowired
     private ComprobanteService comprobanteService;
 
+    @Autowired
+    private FacturaRepository facturaRepository;
+
     @Override
-    public Gasto registrarGasto(Gasto gasto, Long clienteId, Long comprobanteId) {
+    public GastoDTO registrarGasto(Gasto gasto, Long clienteId, Long comprobanteId, Long facturaId) {
 
 
         Cliente cliente = clienteService.obtenerClientePorId(clienteId);
@@ -36,11 +42,15 @@ public class GastoServiceImpl implements GastoService {
             Comprobante comprobante = comprobanteRepository.findById(comprobanteId).orElseThrow(RuntimeException::new);
             gasto.setComprobante(comprobante);
         }
+        if (facturaId != null) {
+            Factura factura = facturaRepository.findById(facturaId).orElseThrow(RuntimeException::new);
+            gasto.setFactura(factura);
+        }
 
         cliente.setSaldoPendiente(cliente.getSaldoPendiente() + gasto.getMonto());
-        clienteService.crearCliente(cliente);
-
-        return gastoRepository.save(gasto);
+        clienteService.actualizarCliente(cliente.getId(),cliente);
+        Gasto gasto1 = gastoRepository.save(gasto);
+        return new GastoDTO(gasto1);
     }
 
     @Override

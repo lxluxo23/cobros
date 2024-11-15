@@ -24,6 +24,7 @@ public class Pago {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente_id",nullable = false)
+    @JsonBackReference
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.EAGER)

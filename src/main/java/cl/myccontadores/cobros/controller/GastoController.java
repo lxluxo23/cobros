@@ -17,13 +17,13 @@ public class GastoController {
     private GastoService gastoService;
 
     @PostMapping
-    public ResponseEntity<Gasto> registrarGasto(@RequestBody GastoDTO gastoDTO) {
+    public ResponseEntity<GastoDTO> registrarGasto(@RequestBody GastoDTO gastoDTO) {
         Gasto gasto = Gasto.builder()
                 .descripcion(gastoDTO.getDescripcion())
                 .monto(gastoDTO.getMonto())
                 .fechaGasto(gastoDTO.getFechaGasto() != null ? gastoDTO.getFechaGasto(): LocalDateTime.now())
                 .build();
-        Gasto nuevoGasto = gastoService.registrarGasto(gasto,gastoDTO.getCliente().getId(),gastoDTO.getComprobante().getId());
+        GastoDTO nuevoGasto = gastoService.registrarGasto(gasto,gastoDTO.getCliente().getId(),gastoDTO.getComprobante().getId(),gastoDTO.getFactura().getId());
         return ResponseEntity.ok(nuevoGasto);
     }
 
