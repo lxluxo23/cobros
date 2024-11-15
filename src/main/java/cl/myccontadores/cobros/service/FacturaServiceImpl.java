@@ -2,11 +2,8 @@ package cl.myccontadores.cobros.service;
 
 import cl.myccontadores.cobros.entity.Cliente;
 import cl.myccontadores.cobros.entity.Factura;
-import cl.myccontadores.cobros.entity.DetalleFactura;
-import cl.myccontadores.cobros.entity.Gasto;
 import cl.myccontadores.cobros.enums.EstadoFactura;
 import cl.myccontadores.cobros.repository.FacturaRepository;
-import cl.myccontadores.cobros.repository.GastoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import cl.myccontadores.cobros.exeptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,8 +19,7 @@ public class FacturaServiceImpl implements FacturaService {
     @Autowired
     private ClienteService clienteService;
 
-    @Autowired
-    GastoRepository gastoRepository;
+
 
     @Override
     public Factura crearFactura(Factura factura) {
@@ -34,22 +30,11 @@ public class FacturaServiceImpl implements FacturaService {
         int montoDetalles = factura.getDetallesFactura().stream()
                 .mapToInt(detalle -> detalle.getSubtotal() != null ? detalle.getSubtotal() : 0)
                 .sum();
-        List<Gasto> gastosPendientes = gastoRepository.findByClienteIdAndFacturaIsNull(cliente.getId());
-        for (Gasto gasto : gastosPendientes) {
-            gasto.setFactura(factura);
-        }
-        int montoGastos = gastosPendientes.stream()
-                .mapToInt(gasto -> gasto.getMonto() != null ? gasto.getMonto() : 0)
-                .sum();
 
-        cliente.setSaldoPendiente(cliente.getSaldoPendiente() + montoGastos);
         clienteService.crearCliente(cliente);
-
         factura = facturaRepository.save(factura);
-        gastoRepository.saveAll(gastosPendientes);
 
         cliente.setSaldoPendiente((int) (cliente.getSaldoPendiente() + factura.getMontoTotal()));
-
         clienteService.actualizarCliente(cliente.getId(), cliente);
         return factura;
     }
@@ -63,11 +48,8 @@ public class FacturaServiceImpl implements FacturaService {
                 .mapToInt(detalle -> detalle.getSubtotal() != null ? detalle.getSubtotal() : 0)
                 .sum();
 
-        int montoGastos = factura.getGastos().stream()
-                .mapToInt(gasto -> gasto.getMonto() != null ? gasto.getMonto() : 0)
-                .sum();
 
-        factura.setMontoTotal((long) (montoDetalles + montoGastos));
+        factura.setMontoTotal((long) (montoDetalles ));
 
        return factura;
     }

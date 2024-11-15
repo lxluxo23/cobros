@@ -39,10 +39,6 @@ public class Cliente {
     @JsonManagedReference
     private List<Pago> pagos;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Gasto> gastos;
-
 
     public Cliente(ClienteDTO dto) {
         this.id = dto.getId();

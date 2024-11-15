@@ -46,7 +46,5 @@ public class Factura {
     @JsonManagedReference
     private List<Pago> pagos;
 
-    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Gasto> gastos;
+
 }
