@@ -1,0 +1,3 @@
+[submodule "cobros_front"]
+	path = cobros_front
+	url = https://github.com/lxluxo23/cobros_front.git

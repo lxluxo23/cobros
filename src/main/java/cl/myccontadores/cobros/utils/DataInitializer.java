@@ -36,8 +36,6 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private MetodoPagoRepository metodoPagoRepository;
 
-    @Autowired
-    private GastoRepository gastoRepository;
 
     @Autowired
     private ComprobanteRepository comprobanteRepository;
@@ -49,6 +47,7 @@ public class DataInitializer implements CommandLineRunner {
     private UsuarioRepository usuarioRepository;
     @Override
     public void run(String... args) throws Exception {
+
         Cliente cliente1 = Cliente.builder()
                 .nombre("Cliente A")
                 .rut("19474665-2")
@@ -58,22 +57,14 @@ public class DataInitializer implements CommandLineRunner {
                 .saldoPendiente(0)
                 .build();
 
-        Cliente cliente2 = Cliente.builder()
-                .nombre("Cliente B")
-                .rut("11111111-1")
-                .direccion("Dirección B")
-                .telefono("987654321")
-                .email("clienteB@example.com")
-                .saldoPendiente(0)
-                .build();
+        clienteRepository.save(cliente1);
 
-        clienteRepository.saveAll(Arrays.asList(cliente1, cliente2));
-
-
+        // Crear métodos de pago
         MetodoPago efectivo = MetodoPago.builder().nombre("Efectivo").build();
         MetodoPago transferencia = MetodoPago.builder().nombre("Transferencia").build();
         metodoPagoRepository.saveAll(Arrays.asList(efectivo, transferencia));
 
+        // Crear ítems
         Item iva = Item.builder()
                 .nombre("IVA")
                 .descripcion("Impuesto al Valor Agregado")
@@ -90,6 +81,7 @@ public class DataInitializer implements CommandLineRunner {
 
         itemRepository.saveAll(Arrays.asList(iva, honorarios));
 
+        // Crear factura para cliente1
         Factura factura1 = Factura.builder()
                 .cliente(cliente1)
                 .fechaEmision(LocalDate.now().atStartOfDay())
@@ -100,6 +92,7 @@ public class DataInitializer implements CommandLineRunner {
 
         facturaRepository.save(factura1);
 
+        // Crear detalles de factura
         DetalleFactura detalle1 = DetalleFactura.builder()
                 .factura(factura1)
                 .item(iva)
@@ -116,20 +109,25 @@ public class DataInitializer implements CommandLineRunner {
 
         detalleFacturaRepository.saveAll(Arrays.asList(detalle1, detalle2));
 
+        // Calcular monto total de la factura
         int montoTotalFactura = detalle1.getSubtotal() + detalle2.getSubtotal();
         factura1.setMontoTotal((long) montoTotalFactura);
         facturaRepository.save(factura1);
 
+        // Actualizar saldo pendiente del cliente
         cliente1.setSaldoPendiente(cliente1.getSaldoPendiente() + montoTotalFactura);
         clienteRepository.save(cliente1);
 
+        // Crear comprobante de pago
         Comprobante comprobantePago = Comprobante.builder()
                 .tipo(TipoComprobante.PAGO)
                 .fecha(LocalDate.now().atStartOfDay())
+                .file(null) // Suponiendo que el archivo se cargará después
                 .build();
 
         comprobanteRepository.save(comprobantePago);
 
+        // Registrar un pago parcial
         Pago pago1 = Pago.builder()
                 .cliente(cliente1)
                 .factura(factura1)
@@ -141,36 +139,33 @@ public class DataInitializer implements CommandLineRunner {
 
         pagoRepository.save(pago1);
 
-
+        // Actualizar saldo pendiente del cliente después del pago
         cliente1.setSaldoPendiente(cliente1.getSaldoPendiente() - pago1.getMonto());
         clienteRepository.save(cliente1);
 
+        // Actualizar estado de la factura si está pagada
         if (cliente1.getSaldoPendiente() <= 0) {
             factura1.setEstado(EstadoFactura.PAGADA);
             facturaRepository.save(factura1);
         }
 
+        // Crear comprobante de gasto
         Comprobante comprobanteGasto = Comprobante.builder()
                 .tipo(TipoComprobante.GASTO)
-                .fecha(LocalDateTime.now())
+                .fecha(LocalDate.now().atStartOfDay())
+                .file(null) // Suponiendo que el archivo se cargará después
                 .build();
 
         comprobanteRepository.save(comprobanteGasto);
 
+        // Registrar un gasto para cliente1
 
-        Gasto gasto1 = Gasto.builder()
-                .cliente(cliente2)
-                .fechaGasto(LocalDateTime.now())
-                .monto(3200)
-                .descripcion("Pago de impuestos")
-                .comprobante(comprobanteGasto)
-                .build();
 
-        gastoRepository.save(gasto1);
+        // Actualizar saldo pendiente del cliente con el gasto
+        cliente1.setSaldoPendiente(cliente1.getSaldoPendiente());
+        clienteRepository.save(cliente1);
 
-        cliente2.setSaldoPendiente(cliente2.getSaldoPendiente() + gasto1.getMonto());
-        clienteRepository.save(cliente2);
-
+        // Crear usuarios
         Usuario u1 = Usuario.builder()
                 .nombreUsuario("admin")
                 .nombre("Admin")
@@ -178,6 +173,7 @@ public class DataInitializer implements CommandLineRunner {
                 .email("admin@example.com")
                 .password(passwordEncoder.encode("caca1234"))
                 .build();
+
         Usuario u2 = Usuario.builder()
                 .nombreUsuario("andrea")
                 .nombre("Andrea")
@@ -185,7 +181,9 @@ public class DataInitializer implements CommandLineRunner {
                 .email("a.cespedes@myccontadores.cl")
                 .password(passwordEncoder.encode("7689myc"))
                 .build();
+
         usuarioRepository.saveAll(Arrays.asList(u1, u2));
+
         log.info("Datos de inicialización cargados exitosamente.");
 
     }

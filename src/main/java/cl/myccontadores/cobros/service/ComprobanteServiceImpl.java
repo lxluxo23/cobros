@@ -15,9 +15,9 @@ public class ComprobanteServiceImpl implements ComprobanteService {
     private FileStorageService fileStorageService;
 
     @Override
-    public ComprobanteDTO crearComprobante(Comprobante comprobante) {
-        Comprobante comprobante1 = comprobanteRepository.save(comprobante);
-        return new ComprobanteDTO(comprobante1);
+    public Comprobante crearComprobante(Comprobante comprobante) {
+        return comprobanteRepository.save(comprobante);
+
     }
 
     @Override

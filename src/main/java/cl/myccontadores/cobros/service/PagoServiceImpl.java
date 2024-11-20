@@ -1,10 +1,12 @@
 package cl.myccontadores.cobros.service;
 
+import cl.myccontadores.cobros.dto.PagoDTO;
 import cl.myccontadores.cobros.entity.Cliente;
 import cl.myccontadores.cobros.entity.Factura;
 import cl.myccontadores.cobros.entity.Pago;
 import cl.myccontadores.cobros.enums.EstadoFactura;
 import cl.myccontadores.cobros.exeptions.ResourceNotFoundException;
+import cl.myccontadores.cobros.repository.ClienteRepository;
 import cl.myccontadores.cobros.repository.PagoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,30 +26,34 @@ public class PagoServiceImpl implements PagoService {
     @Autowired
     private FacturaService facturaService;
 
+    @Autowired
+    ClienteRepository clienteRepository;
+
     @Override
-    public Pago registrarPago(Pago pago) {
-
+    public Pago registrarPago(PagoDTO pago) {
         Cliente cliente = clienteService.obtenerClientePorId(pago.getCliente().getId());
-        pago.setCliente(cliente);
 
+        Pago nuevoPago = new Pago(pago);
+        nuevoPago.setCliente(cliente);
 
-        if (pago.getFactura() != null) {
-            Factura factura = facturaService.obtenerFacturaPorId(pago.getFactura().getId());
-            pago.setFactura(factura);
+        if (nuevoPago.getFactura() != null) {
+            Factura factura = facturaService.obtenerFacturaPorId(nuevoPago.getFactura().getId());
+            nuevoPago.setFactura(factura);
         }
 
-        cliente.setSaldoPendiente(cliente.getSaldoPendiente() - pago.getMonto());
-        clienteService.crearCliente(cliente);
+        cliente.setSaldoPendiente(cliente.getSaldoPendiente() - nuevoPago.getMonto());
+        clienteService.actualizarCliente(cliente.getId(), cliente);
 
-        if (pago.getFactura() != null) {
-            Factura factura = pago.getFactura();
+
+        if (nuevoPago.getFactura() != null) {
+            Factura factura = nuevoPago.getFactura();
             if (cliente.getSaldoPendiente() <= 0) {
                 factura.setEstado(EstadoFactura.PAGADA);
                 facturaService.actualizarEstadoFactura(factura.getId(), EstadoFactura.PAGADA);
             }
         }
 
-        return pagoRepository.save(pago);
+        return pagoRepository.save(nuevoPago);
     }
 
     @Override
