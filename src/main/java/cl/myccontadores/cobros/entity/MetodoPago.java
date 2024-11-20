@@ -26,4 +26,8 @@ public class MetodoPago {
     @OneToMany(mappedBy = "metodoPago" , cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Pago> pagos;
+
+    public MetodoPago(Long id) {
+        this.id = id;
+    }
 }

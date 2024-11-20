@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-@RepositoryRestResource
+
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     List<Cliente> findBySaldoPendienteGreaterThan(Integer saldo);

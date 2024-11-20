@@ -1,5 +1,6 @@
 package cl.myccontadores.cobros.service;
 
+import cl.myccontadores.cobros.dto.ClienteDTO;
 import cl.myccontadores.cobros.entity.Cliente;
 import cl.myccontadores.cobros.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,12 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+
     @Override
-    public Cliente crearCliente(Cliente cliente) {
-        return clienteRepository.save(cliente);
+    public Cliente crearCliente(ClienteDTO cliente) {
+        Cliente nuevoCliente = new Cliente(cliente);
+        return clienteRepository.save(nuevoCliente);
     }
 
     @Override

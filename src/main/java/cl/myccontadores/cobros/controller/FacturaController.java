@@ -1,5 +1,7 @@
 package cl.myccontadores.cobros.controller;
 
+import cl.myccontadores.cobros.dto.DetalleFacturaDTO;
+import cl.myccontadores.cobros.dto.FacturaDTO;
 import cl.myccontadores.cobros.entity.Factura;
 import cl.myccontadores.cobros.enums.EstadoFactura;
 import cl.myccontadores.cobros.service.FacturaService;
@@ -18,10 +20,17 @@ public class FacturaController {
     private FacturaService facturaService;
 
     @PostMapping
-    public ResponseEntity<Factura> crearFactura(@RequestBody Factura factura) {
-        Factura nuevaFactura = facturaService.crearFactura(factura);
+    public ResponseEntity<FacturaDTO> crearFactura(@RequestBody FacturaDTO factura) {
+        FacturaDTO nuevaFactura = facturaService.crearFactura(factura);
         return ResponseEntity.ok(nuevaFactura);
     }
+    @PostMapping("/detalles")
+    public ResponseEntity<Factura> agregarDetalleFactura(
+            @RequestBody DetalleFacturaDTO detalleDTO) {
+        Factura facturaActualizada = facturaService.agregarDetalleFactura(detalleDTO);
+        return ResponseEntity.ok(facturaActualizada);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Factura> obtenerFacturaPorId(@PathVariable Long id) {

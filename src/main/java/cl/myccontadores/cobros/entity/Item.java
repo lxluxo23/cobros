@@ -1,6 +1,8 @@
 package cl.myccontadores.cobros.entity;
 
+import cl.myccontadores.cobros.dto.ItemDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +34,12 @@ public class Item {
     @JsonIgnore
     private List<DetalleFactura> detallesFactura;
 
+    @OneToOne
+    @JoinColumn(name = "comprobante_id")
+    @JsonManagedReference
+    private Comprobante comprobante;
+
+    public Item(Long id) {
+        this.id = id;
+    }
 }

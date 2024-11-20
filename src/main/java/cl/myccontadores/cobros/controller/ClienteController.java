@@ -1,5 +1,6 @@
 package cl.myccontadores.cobros.controller;
 
+import cl.myccontadores.cobros.dto.ClienteDTO;
 import cl.myccontadores.cobros.entity.Cliente;
 import cl.myccontadores.cobros.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/clientes")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-
 public class ClienteController {
 
     @Autowired
@@ -23,15 +23,15 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable Long id) {
+    public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable("id") Long id) {
         Cliente cliente = clienteService.obtenerClientePorId(id);
         return ResponseEntity.ok(cliente);
     }
 
     @PostMapping
-    public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<ClienteDTO> crearCliente(@RequestBody ClienteDTO cliente) {
         Cliente nuevoCliente = clienteService.crearCliente(cliente);
-        return ResponseEntity.ok(nuevoCliente);
+        return ResponseEntity.ok(new ClienteDTO(nuevoCliente));
     }
 
     @PutMapping("/{id}")

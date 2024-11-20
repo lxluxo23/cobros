@@ -1,5 +1,6 @@
 package cl.myccontadores.cobros.controller;
 
+import cl.myccontadores.cobros.dto.ComprobanteDTO;
 import cl.myccontadores.cobros.entity.Comprobante;
 import cl.myccontadores.cobros.entity.FileDB;
 import cl.myccontadores.cobros.enums.TipoComprobante;
@@ -26,19 +27,17 @@ public class ComprobanteController {
     private FileStorageService fileStorageService;
 
     @PostMapping
-    ResponseEntity<Comprobante> comprobanteResponseEntity(
+    ResponseEntity<ComprobanteDTO> comprobanteResponseEntity(
             @RequestParam("file") MultipartFile file,
             @RequestParam("tipo") TipoComprobante tipo) {
         try {
             FileDB fileDB = fileStorageService.store(file);
-
             Comprobante comprobante = Comprobante.builder()
                     .tipo(tipo)
                     .fecha(LocalDateTime.now())
                     .file(fileDB)
                     .build();
-
-            Comprobante nuevoComprobante = comprobanteService.crearComprobante(comprobante);
+            ComprobanteDTO nuevoComprobante = new ComprobanteDTO(comprobanteService.crearComprobante(comprobante));
             return ResponseEntity.ok(nuevoComprobante);
         } catch (IOException e) {
             log.error("Error al subir el archivo", e);
@@ -47,10 +46,11 @@ public class ComprobanteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comprobante> obtenerComprobantePorId(@PathVariable Long id) {
-        Comprobante comprobante = comprobanteService.obtenerComprobantePorId(id);
+    public ResponseEntity<ComprobanteDTO> obtenerComprobantePorId(@PathVariable Long id) {
+        ComprobanteDTO comprobante = comprobanteService.obtenerComprobantePorId(id);
         return ResponseEntity.ok(comprobante);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarComprobante(@PathVariable Long id) {
         comprobanteService.borrarComprobante(id);
