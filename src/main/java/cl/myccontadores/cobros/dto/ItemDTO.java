@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class ItemDTO implements Serializable {
     private String descripcion;
     private Integer precioUnitario;
     private String categoria;
+    private ComprobanteDTO comprobante;
 
     public ItemDTO(Item model) {
         this.id = model.getId();
@@ -27,6 +29,7 @@ public class ItemDTO implements Serializable {
         this.descripcion = model.getDescripcion();
         this.precioUnitario = model.getPrecioUnitario();
         this.categoria = model.getCategoria();
+        this.comprobante = Optional.ofNullable(model.getComprobante()).map(ComprobanteDTO::new).orElse(null);
     }
 
 

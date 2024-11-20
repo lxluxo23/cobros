@@ -1,5 +1,6 @@
 package cl.myccontadores.cobros.controller;
 
+import cl.myccontadores.cobros.dto.PagoDTO;
 import cl.myccontadores.cobros.entity.Pago;
 import cl.myccontadores.cobros.service.PagoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ public class PagoController {
     private PagoService pagoService;
 
     @PostMapping
-    public ResponseEntity<Pago> registrarPago(@RequestBody Pago pago) {
+    public ResponseEntity<PagoDTO> registrarPago(@RequestBody PagoDTO pago) {
         Pago nuevoPago = pagoService.registrarPago(pago);
-        return ResponseEntity.ok(nuevoPago);
+        return ResponseEntity.ok(new PagoDTO(nuevoPago));
     }
 
     @GetMapping("/{id}")

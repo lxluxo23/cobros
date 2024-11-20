@@ -23,14 +23,20 @@ public class FacturaDTO implements Serializable {
     private ClienteDTO cliente;
     private LocalDateTime fechaEmision;
     private Byte mesCorrespondiente;
+    private Integer anio;
     private Long montoTotal;
     private EstadoFactura estado;
+
+    public FacturaDTO(Long id) {
+        this.id = id;
+    }
 
     public FacturaDTO(Factura model) {
         this.id = model.getId();
         this.cliente = Optional.ofNullable(model.getCliente()).map(ClienteDTO::new).orElse(null);
         this.fechaEmision = model.getFechaEmision();
         this.mesCorrespondiente = model.getMesCorrespondiente();
+        this.anio = model.getAnio();
         this.montoTotal = model.getMontoTotal();
         this.estado = model.getEstado();
     }

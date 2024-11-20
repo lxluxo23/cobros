@@ -12,4 +12,5 @@ import java.util.List;
 public interface FacturaRepository extends JpaRepository<Factura,Long> {
 
     List<Factura> findByCliente(Cliente cliente);
+    boolean existsByClienteIdAndMesCorrespondienteAndAnio(Long clienteId, Byte mesCorrespondiente, Integer anio);
 }

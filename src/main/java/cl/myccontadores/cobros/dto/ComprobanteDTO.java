@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Data
@@ -22,6 +23,8 @@ public class ComprobanteDTO implements Serializable {
     private Long id;
     private TipoComprobante tipo;
     private ResponseFile archivo;
+    private LocalDateTime fecha;
+    private ItemDTO item;
 
 
     public ComprobanteDTO(Comprobante model) {
@@ -36,6 +39,8 @@ public class ComprobanteDTO implements Serializable {
                     .toUriString();
             return new ResponseFile(file.getName(), fileDownloadUri, file.getType(), file.getData().length);
         }).orElse(null);
+        this.fecha = model.getFecha();
+        this.item = Optional.ofNullable(model.getItem()).map(ItemDTO::new).orElse(null);
     }
 
 }

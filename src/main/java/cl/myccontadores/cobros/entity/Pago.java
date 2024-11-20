@@ -1,5 +1,6 @@
 package cl.myccontadores.cobros.entity;
 
+import cl.myccontadores.cobros.dto.PagoDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Data
 @Entity
@@ -44,4 +46,17 @@ public class Pago {
     @OneToOne
     @JoinColumn(name = "comprobante_id")
     private Comprobante comprobante;
+
+    public Pago(Long id) {
+        this.id = id;
+    }
+    public Pago(PagoDTO dto) {
+        this.id = dto.getId();
+        this.cliente = Optional.ofNullable(dto.getCliente()).map(cliente->new Cliente(cliente.getId())).orElse(null);
+        this.factura = Optional.ofNullable(dto.getFactura()).map(factura->new Factura(factura.getId())).orElse(null);
+        this.fechaPago = dto.getFechaPago();
+        this.monto = dto.getMonto();
+        this.metodoPago = Optional.ofNullable(dto.getMetodoPago()).map(metodoPago->new MetodoPago(metodoPago.getId())).orElse(null);
+        this.comprobante = Optional.ofNullable(dto.getComprobante()).map(comprobante->new Comprobante(comprobante.getId())).orElse(null);
+    }
 }

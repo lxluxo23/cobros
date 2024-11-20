@@ -32,7 +32,7 @@ public class Cliente {
     private Integer saldoPendiente;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonManagedReference("cliente-factura")
     private List<Factura> facturas;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
@@ -50,4 +50,7 @@ public class Cliente {
         this.saldoPendiente = dto.getSaldoPendiente();
     }
 
+    public Cliente(Long id) {
+        this.id = id;
+    }
 }

@@ -32,14 +32,12 @@ public class ComprobanteController {
             @RequestParam("tipo") TipoComprobante tipo) {
         try {
             FileDB fileDB = fileStorageService.store(file);
-
             Comprobante comprobante = Comprobante.builder()
                     .tipo(tipo)
                     .fecha(LocalDateTime.now())
                     .file(fileDB)
                     .build();
-
-            ComprobanteDTO nuevoComprobante = comprobanteService.crearComprobante(comprobante);
+            ComprobanteDTO nuevoComprobante = new ComprobanteDTO(comprobanteService.crearComprobante(comprobante));
             return ResponseEntity.ok(nuevoComprobante);
         } catch (IOException e) {
             log.error("Error al subir el archivo", e);

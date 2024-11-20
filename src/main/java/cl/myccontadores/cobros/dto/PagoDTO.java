@@ -29,7 +29,7 @@ public class PagoDTO implements Serializable {
         this.id = model.getId();
         this.cliente = Optional.ofNullable(model.getCliente()).map(ClienteDTO::new).orElse(null);
         this.factura = Optional.ofNullable(model.getFactura()).map(FacturaDTO::new).orElse(null);
-        this.fechaPago = model.getFechaPago();
+        this.fechaPago = Optional.ofNullable(model.getFechaPago()).orElse(LocalDateTime.now());
         this.monto = model.getMonto();
         this.metodoPago = Optional.ofNullable(model.getMetodoPago()).map(MetodoPagoDTO::new).orElse(null);
         this.comprobante = Optional.ofNullable(model.getComprobante()).map(ComprobanteDTO::new).orElse(null);
