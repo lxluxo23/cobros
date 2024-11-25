@@ -5,16 +5,18 @@ import cl.myccontadores.cobros.dto.FacturaDTO;
 import cl.myccontadores.cobros.entity.Factura;
 import cl.myccontadores.cobros.enums.EstadoFactura;
 import cl.myccontadores.cobros.service.FacturaService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/facturas")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-
+@Log4j2
 public class FacturaController {
     @Autowired
     private FacturaService facturaService;
@@ -39,8 +41,8 @@ public class FacturaController {
     }
 
     @GetMapping("/cliente/{clienteId}")
-    public List<Factura> obtenerFacturasPorCliente(@PathVariable Long clienteId) {
-        return facturaService.obtenerFacturasPorClienteId(clienteId);
+    public List<FacturaDTO> obtenerFacturasPorCliente(@PathVariable("clienteId") Long clienteId) {
+        return facturaService.obtenerFacturasPorClienteId(clienteId).stream().map(FacturaDTO::new).toList();
     }
 
     @PutMapping("/{id}/estado")

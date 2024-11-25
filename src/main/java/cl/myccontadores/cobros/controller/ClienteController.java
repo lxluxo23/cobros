@@ -18,8 +18,8 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @GetMapping
-    public List<Cliente> obtenerTodosLosClientes() {
-        return clienteService.obtenerTodosLosClientes();
+    public List<ClienteDTO> obtenerTodosLosClientes() {
+        return clienteService.obtenerTodosLosClientes().stream().map(ClienteDTO::new).toList();
     }
 
     @GetMapping("/{id}")
@@ -41,7 +41,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarCliente(@PathVariable("id") Long id) {
         clienteService.eliminarCliente(id);
         return ResponseEntity.noContent().build();
     }

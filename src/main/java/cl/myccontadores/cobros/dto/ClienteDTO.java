@@ -31,4 +31,8 @@ public class ClienteDTO implements Serializable {
         this.email = model.getEmail();
         this.saldoPendiente = model.getSaldoPendiente();
     }
+
+    public ClienteDTO(Long id) {
+        this.id = id;
+    }
 }
