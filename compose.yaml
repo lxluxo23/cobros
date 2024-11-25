@@ -1,9 +1,11 @@
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=cobros'
-      - 'POSTGRES_PASSWORD=caca5361'
-      - 'POSTGRES_USER=cobros'
-    ports:
-      - '5432:5432'
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - nextcloud_backend
+    container_name: contenedor-cobros-backend
+networks:
+  nextcloud_backend:
+    external: true
