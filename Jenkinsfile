@@ -1,11 +1,10 @@
 pipeline {
     agent any
-
     stages {
-        stage('Crear imagen y desplegar') {
+        stage('Build and Deploy') {
             steps {
                 script {
-                    echo 'Construyendo y desplegando el contenedor'
+                    sh 'docker rm -f contenedor-cobros-backend || true'
                     sh 'docker-compose up --build -d'
                 }
             }
