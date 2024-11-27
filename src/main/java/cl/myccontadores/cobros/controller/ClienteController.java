@@ -23,9 +23,9 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable("id") Long id) {
+    public ResponseEntity<ClienteDTO> obtenerClientePorId(@PathVariable("id") Long id) {
         Cliente cliente = clienteService.obtenerClientePorId(id);
-        return ResponseEntity.ok(cliente);
+        return ResponseEntity.ok(new ClienteDTO(cliente));
     }
 
     @PostMapping
