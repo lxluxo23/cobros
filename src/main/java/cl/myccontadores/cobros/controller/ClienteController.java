@@ -18,15 +18,16 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @GetMapping
-    public List<Cliente> obtenerTodosLosClientes() {
-        return clienteService.obtenerTodosLosClientes();
+    public List<ClienteDTO> obtenerTodosLosClientes() {
+        return clienteService.obtenerTodosLosClientes().stream().map(ClienteDTO::new).toList();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> obtenerClientePorId(@PathVariable("id") Long id) {
+    public ResponseEntity<ClienteDTO> obtenerClientePorId(@PathVariable("id") Long id) {
         Cliente cliente = clienteService.obtenerClientePorId(id);
-        return ResponseEntity.ok(cliente);
+        return ResponseEntity.ok(new ClienteDTO(cliente));
     }
+
 
     @PostMapping
     public ResponseEntity<ClienteDTO> crearCliente(@RequestBody ClienteDTO cliente) {
@@ -40,8 +41,10 @@ public class ClienteController {
         return ResponseEntity.ok(cliente);
     }
 
+
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarCliente(@PathVariable("id") Long id) {
         clienteService.eliminarCliente(id);
         return ResponseEntity.noContent().build();
     }
