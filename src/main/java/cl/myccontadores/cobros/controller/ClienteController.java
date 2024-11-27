@@ -28,6 +28,7 @@ public class ClienteController {
         return ResponseEntity.ok(new ClienteDTO(cliente));
     }
 
+
     @PostMapping
     public ResponseEntity<ClienteDTO> crearCliente(@RequestBody ClienteDTO cliente) {
         Cliente nuevoCliente = clienteService.crearCliente(cliente);
