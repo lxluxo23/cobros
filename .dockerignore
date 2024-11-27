@@ -1,0 +1,11 @@
+.git
+.gitignore
+.gradle
+build
+out
+node_modules
+Dockerfile
+docker-compose.yml
+**/node_modules
+
+
