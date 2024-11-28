@@ -71,6 +71,8 @@ public class FacturaServiceImpl implements FacturaService {
     public Factura agregarDetalleFactura(DetalleFacturaDTO detalleDTO) {
         Factura factura = facturaRepository.findById(detalleDTO.getFactura().getId())
                 .orElseThrow(() -> new RuntimeException("Factura no encontrada con id: " + detalleDTO.getFactura().getId()));
+        Cliente cliente = clienteRepository.findById(factura.getCliente().getId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + factura.getCliente().getId()));
 
         factura.setEstado(EstadoFactura.PENDIENTE);
         Item item = itemRepository.findById(detalleDTO.getItem().getId())
@@ -87,6 +89,7 @@ public class FacturaServiceImpl implements FacturaService {
         int nuevoMontoTotal = factura.getDetallesFactura().stream()
                 .mapToInt(DetalleFactura::getSubtotal)
                 .sum();
+        cliente.setSaldoPendiente(cliente.getSaldoPendiente() + nuevoMontoTotal);
         factura.setMontoTotal((long) nuevoMontoTotal);
         facturaRepository.save(factura);
 
