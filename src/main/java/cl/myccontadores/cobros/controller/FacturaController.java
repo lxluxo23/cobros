@@ -35,9 +35,9 @@ public class FacturaController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Factura> obtenerFacturaPorId(@PathVariable Long id) {
+    public ResponseEntity<FacturaDTO> obtenerFacturaPorId(@PathVariable Long id) {
         Factura factura = facturaService.obtenerFacturaPorId(id);
-        return ResponseEntity.ok(factura);
+        return ResponseEntity.ok(new FacturaDTO(factura));
     }
 
     @GetMapping("/cliente/{clienteId}")

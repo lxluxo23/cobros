@@ -1,5 +1,5 @@
 
-FROM node:21-alpine AS frontend-build
+FROM node:20.11.1-alpine AS frontend-build
 WORKDIR /app
 COPY cobros_front/package*.json ./
 RUN npm install
