@@ -71,6 +71,8 @@ public class FacturaServiceImpl implements FacturaService {
     public Factura agregarDetalleFactura(DetalleFacturaDTO detalleDTO) {
         Factura factura = facturaRepository.findById(detalleDTO.getFactura().getId())
                 .orElseThrow(() -> new RuntimeException("Factura no encontrada con id: " + detalleDTO.getFactura().getId()));
+
+        factura.setEstado(EstadoFactura.PENDIENTE);
         Item item = itemRepository.findById(detalleDTO.getItem().getId())
                 .orElseThrow(() -> new RuntimeException("Ítem no encontrado con id: " + detalleDTO.getItem().getId()));
 

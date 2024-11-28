@@ -3,6 +3,7 @@ package cl.myccontadores.cobros.dto;
 import cl.myccontadores.cobros.Message.ResponseFile;
 import cl.myccontadores.cobros.entity.Comprobante;
 import cl.myccontadores.cobros.enums.TipoComprobante;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class ComprobanteDTO implements Serializable {
     private TipoComprobante tipo;
     private ResponseFile archivo;
     private LocalDateTime fecha;
+    @JsonBackReference
     private ItemDTO item;
 
 
@@ -40,7 +42,7 @@ public class ComprobanteDTO implements Serializable {
             return new ResponseFile(file.getName(), fileDownloadUri, file.getType(), file.getData().length);
         }).orElse(null);
         this.fecha = model.getFecha();
-        this.item = Optional.ofNullable(model.getItem()).map(ItemDTO::new).orElse(null);
+        this.item = Optional.ofNullable(model.getItem()).map(item -> new ItemDTO(item.getId())).orElse(null);
     }
 
 }

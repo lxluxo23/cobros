@@ -21,7 +21,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<Item> crearItemConComprobante(
             @ModelAttribute ItemDTO itemDTO,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam(value = "file" , required = false) MultipartFile file ) {
         try {
             Item item = new Item();
             item.setNombre(itemDTO.getNombre());

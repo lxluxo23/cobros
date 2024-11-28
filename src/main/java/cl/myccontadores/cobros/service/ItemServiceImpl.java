@@ -29,13 +29,15 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Item crearItemConComprobante(Item item, MultipartFile file) throws IOException {
-        FileDB fileDB = fileStorageService.store(file);
         Comprobante comprobante = Comprobante.builder()
                 .tipo(TipoComprobante.GASTO)
                 .fecha(LocalDateTime.now())
-                .file(fileDB)
                 .build();
-        comprobante =  comprobanteService.crearComprobante(comprobante);
+        if (file != null && !file.isEmpty()) {
+            FileDB fileDB = fileStorageService.store(file);
+            comprobante.setFile(fileDB);
+        }
+        comprobante = comprobanteService.crearComprobante(comprobante);
         item.setComprobante(comprobante);
         return itemRepository.save(item);
     }
