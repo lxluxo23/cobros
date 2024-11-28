@@ -1,6 +1,7 @@
 package cl.myccontadores.cobros.dto;
 
 import cl.myccontadores.cobros.entity.Item;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class ItemDTO implements Serializable {
     private String descripcion;
     private Integer precioUnitario;
     private String categoria;
+    @JsonBackReference
     private ComprobanteDTO comprobante;
 
     public ItemDTO(Item model) {
@@ -33,4 +35,7 @@ public class ItemDTO implements Serializable {
     }
 
 
+    public ItemDTO(Long id) {
+        this.id = id;
+    }
 }
