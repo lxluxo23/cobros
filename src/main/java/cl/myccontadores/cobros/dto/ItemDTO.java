@@ -2,6 +2,7 @@ package cl.myccontadores.cobros.dto;
 
 import cl.myccontadores.cobros.entity.Item;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
