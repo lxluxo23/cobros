@@ -22,7 +22,7 @@ public class ItemDTO implements Serializable {
     private String descripcion;
     private Integer precioUnitario;
     private String categoria;
-    @JsonBackReference
+    @JsonManagedReference
     private ComprobanteDTO comprobante;
 
     public ItemDTO(Item model) {
