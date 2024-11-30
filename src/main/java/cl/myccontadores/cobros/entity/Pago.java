@@ -2,6 +2,7 @@ package cl.myccontadores.cobros.entity;
 
 import cl.myccontadores.cobros.dto.PagoDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -38,14 +40,14 @@ public class Pago {
     private LocalDateTime fechaPago;
     private Integer monto;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "metodo_pago_id", nullable = false)
     private MetodoPago metodoPago;
 
-    @OneToOne
-    @JoinColumn(name = "comprobante_id")
-    private Comprobante comprobante;
+
+    @OneToMany(mappedBy = "pago", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<DetallePago> detallesPago;
 
     public Pago(Long id) {
         this.id = id;
@@ -57,6 +59,5 @@ public class Pago {
         this.fechaPago = dto.getFechaPago();
         this.monto = dto.getMonto();
         this.metodoPago = Optional.ofNullable(dto.getMetodoPago()).map(metodoPago->new MetodoPago(metodoPago.getId())).orElse(null);
-        this.comprobante = Optional.ofNullable(dto.getComprobante()).map(comprobante->new Comprobante(comprobante.getId())).orElse(null);
     }
 }
