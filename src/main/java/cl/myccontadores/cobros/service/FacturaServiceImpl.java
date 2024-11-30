@@ -11,6 +11,7 @@ import cl.myccontadores.cobros.repository.ClienteRepository;
 import cl.myccontadores.cobros.repository.DetalleFacturaRepository;
 import cl.myccontadores.cobros.repository.FacturaRepository;
 import cl.myccontadores.cobros.repository.ItemRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import cl.myccontadores.cobros.exeptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -68,15 +69,16 @@ public class FacturaServiceImpl implements FacturaService {
     }
 
     @Override
+    @Transactional
     public Factura agregarDetalleFactura(DetalleFacturaDTO detalleDTO) {
         Factura factura = facturaRepository.findById(detalleDTO.getFactura().getId())
-                .orElseThrow(() -> new RuntimeException("Factura no encontrada con id: " + detalleDTO.getFactura().getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrada con id: " + detalleDTO.getFactura().getId()));
         Cliente cliente = clienteRepository.findById(factura.getCliente().getId())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado con id: " + factura.getCliente().getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + factura.getCliente().getId()));
 
         factura.setEstado(EstadoFactura.PENDIENTE);
         Item item = itemRepository.findById(detalleDTO.getItem().getId())
-                .orElseThrow(() -> new RuntimeException("Ítem no encontrado con id: " + detalleDTO.getItem().getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Ítem no encontrado con id: " + detalleDTO.getItem().getId()));
 
         DetalleFactura nuevoDetalle = DetalleFactura.builder()
                 .factura(factura)
