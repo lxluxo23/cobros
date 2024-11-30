@@ -49,6 +49,19 @@ public class Factura {
     @JsonManagedReference
     private List<Pago> pagos;
 
+    @Transient
+    public Integer getSaldoPendiente() {
+        Integer totalPagado = pagos.stream()
+                .map(Pago::getMonto)
+                .reduce(0, Integer::sum);
+        return montoTotal.intValue() - totalPagado;
+    }
+
+    @Transient
+    public boolean isPagada() {
+        return getSaldoPendiente() <= 0;
+    }
+
     public Factura(Long id) {
         this.id = id;
     }
