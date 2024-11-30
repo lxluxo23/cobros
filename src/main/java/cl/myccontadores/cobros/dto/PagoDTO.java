@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Data
@@ -20,14 +21,13 @@ import java.util.Optional;
 public class PagoDTO implements Serializable {
 
     private Long id;
-    @JsonIgnore
     private ClienteDTO cliente;
     @JsonBackReference
     private FacturaDTO factura;
     private LocalDateTime fechaPago;
     private Integer monto;
     private MetodoPagoDTO metodoPago;
-    private ComprobanteDTO comprobante;
+    private List<DetallePagoDTO> detallesPago;
 
     public PagoDTO (Pago model){
         this.id = model.getId();
@@ -36,6 +36,6 @@ public class PagoDTO implements Serializable {
         this.fechaPago = Optional.ofNullable(model.getFechaPago()).orElse(LocalDateTime.now());
         this.monto = model.getMonto();
         this.metodoPago = Optional.ofNullable(model.getMetodoPago()).map(MetodoPagoDTO::new).orElse(null);
-        this.comprobante = Optional.ofNullable(model.getComprobante()).map(ComprobanteDTO::new).orElse(null);
+        this.detallesPago = Optional.ofNullable(model.getDetallesPago()).map(detalles -> detalles.stream().map(DetallePagoDTO::new).toList()).orElse(null);
     }
 }

@@ -134,7 +134,6 @@ public class DataInitializer implements CommandLineRunner {
                 .fechaPago(LocalDate.now().atStartOfDay())
                 .monto(5000) // Pago parcial
                 .metodoPago(efectivo)
-                .comprobante(comprobantePago)
                 .build();
 
         pagoRepository.save(pago1);
